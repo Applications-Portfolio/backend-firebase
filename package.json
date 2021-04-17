@@ -18,7 +18,8 @@
   "homepage": "https://github.com/Applications-Portfolio/backend-firebase#readme",
   "dependencies": {
     "firebase-admin": "^9.6.0",
-    "firebase-functions": "^3.13.2"
+    "firebase-functions": "^3.13.2",
+    "uninstall": "0.0.0"
   },
   "devDependencies": {
     "firebase-tools": "^9.10.0"
