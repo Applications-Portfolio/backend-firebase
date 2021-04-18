@@ -12,7 +12,7 @@ const gqlServer = (): express.Express => {
     resolvers,
     // Enable graphiql gui
     introspection: true,
-    playground: true
+    playground: true,
   });
 
   apolloServer.applyMiddleware({app, path: "/"});
