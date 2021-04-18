@@ -15,4 +15,3 @@ export interface User {
   email: string,
   addresses: [Address]
 }
-
