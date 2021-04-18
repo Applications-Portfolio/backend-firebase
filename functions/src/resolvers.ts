@@ -7,7 +7,25 @@ import {
 
 const resolverFunctions = {
   Query: {
-    readUsers: (): User | number => 0,
+    readUsers(parent: object, args: object, context: {
+      firestoreDatabase: admin.firestore.Firestore
+    }): Promise<[User?]> {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const {firestoreDatabase} = context;
+          const snapshot = await firestoreDatabase.collection("users").get();
+          const response: [User?] = [];
+
+          snapshot.forEach((element) => {
+            response.push(element.data() as User);
+          });
+
+          resolve(response);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
   },
   Mutation: {
     createUser(parent: object, args: User, context: {
