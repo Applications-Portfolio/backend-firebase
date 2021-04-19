@@ -1,12 +1,13 @@
 {
   "name": "functions",
   "scripts": {
+    "set-development": "firebase functions:config:set apollo.environment='development'",
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "npm run build && firebase deploy --only functions",
+    "deploy": "npm run build && npm run set-development && firebase deploy --only functions",
     "logs": "firebase functions:log"
   },
   "engines": {
