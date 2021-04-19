@@ -115,6 +115,28 @@ const resolverFunctions = {
       });
     },
   },
+  User: {
+    addresses(parent: User, args: object, context: {
+      firestoreDatabase: admin.firestore.Firestore
+    }): Promise<[Address?]> {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const {firestoreDatabase} = context;
+          const snapshot = await firestoreDatabase.
+              collection("addresses").where("userId", "==", parent.phone).get();
+          const response: [Address?] = [];
+
+          snapshot.forEach((element) => {
+            response.push(element.data() as Address);
+          });
+
+          resolve(response);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
+  },
 };
 
 export default resolverFunctions;
