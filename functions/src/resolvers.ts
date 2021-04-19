@@ -28,6 +28,26 @@ const resolverFunctions = {
         }
       });
     },
+    readUser(parent: object, args: Pick<User, "phone">, context: {
+      firestoreDatabase: admin.firestore.Firestore
+    }): Promise<User> {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const {firestoreDatabase} = context;
+          const userDoc = await firestoreDatabase.
+              collection("users").doc(args.phone).get();
+          const user: User | undefined = userDoc.data() as User | undefined;
+
+          if (!userDoc.exists || user === undefined) {
+            reject(new Error("User not found"));
+          }
+
+          resolve(user as User);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
   },
   Mutation: {
     createUser(parent: object, args: User, context: {
