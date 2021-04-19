@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable @typescript-eslint/ban-types */
 import * as admin from "firebase-admin";
 import {
+  Address,
   User,
 } from "./models";
 
@@ -40,6 +42,52 @@ const resolverFunctions = {
             email: args.email,
             name: args.name,
           });
+          resolve(args);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    },
+    createAddress(parent: object, args: Address, context: {
+      firestoreDatabase: admin.firestore.Firestore
+    }): Promise<Address> {
+      return new Promise(async (resolve, reject) => {
+        try {
+          const {firestoreDatabase} = context;
+          const {
+            userId,
+          } = args;
+          const userDoc = await firestoreDatabase.
+              collection("users").doc(userId).get();
+          const user: User | undefined = userDoc.data() as User | undefined;
+
+          if (!userDoc.exists || user === undefined) {
+            reject(new Error("User not found"));
+          }
+          const {
+            city,
+            complement,
+            neighborhood,
+            number,
+            state,
+            street,
+            zipCode,
+          } = args;
+
+          const address: Address = {
+            userId: user!.phone,
+            city,
+            complement,
+            neighborhood,
+            number,
+            state,
+            street,
+            zipCode,
+          };
+
+          await firestoreDatabase.collection("addresses")
+              .doc().set(address);
+
           resolve(args);
         } catch (error) {
           reject(error);
